@@ -12,7 +12,7 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.34.0"
 }
 
-group = "com.batoulapps.adhan"
+group = "io.github.meypod.adhan_kotlin"
 version = property("version") ?: ""
 
 kotlin {
@@ -22,25 +22,25 @@ kotlin {
 
     jvm()
 
-    js(IR) {
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "30s"
-                }
-            }
-        }
-    }
-
-    wasmJs {
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "30s"
-                }
-            }
-        }
-    }
+//    js(IR) {
+//        nodejs {
+//            testTask {
+//                useMocha {
+//                    timeout = "30s"
+//                }
+//            }
+//        }
+//    }
+//
+//    wasmJs {
+//        nodejs {
+//            testTask {
+//                useMocha {
+//                    timeout = "30s"
+//                }
+//            }
+//        }
+//    }
 
     linuxX64()
     linuxArm64()
@@ -88,19 +88,19 @@ kotlin {
             }
         }
 
-        val jsTest by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
-                implementation("com.squareup.okio:okio-nodefilesystem:3.16.1")
-                implementation(npm("@js-joda/timezone", "2.3.0"))
-            }
-        }
-
-        val wasmJsTest by getting {
-            dependencies {
-                implementation(npm("@js-joda/timezone", "2.3.0"))
-            }
-        }
+//        val jsTest by getting {
+//            dependencies {
+//                implementation(kotlin("test-js"))
+//                implementation("com.squareup.okio:okio-nodefilesystem:3.16.1")
+//                implementation(npm("@js-joda/timezone", "2.3.0"))
+//            }
+//        }
+//
+//        val wasmJsTest by getting {
+//            dependencies {
+//                implementation(npm("@js-joda/timezone", "2.3.0"))
+//            }
+//        }
     }
 
     // set an environment variable and read it in the test
@@ -123,12 +123,12 @@ kotlin {
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
-    coordinates("com.batoulapps.adhan", "adhan2", version.toString())
+    coordinates("io.github.meypod", "adhan_kotlin", version.toString())
 
     pom {
         name.set("Adhan Prayertimes Library")
-        description.set("A high precision Islamic prayer times library")
-        url.set("https://github.com/batoulapps/adhan-kotlin")
+        description.set("extended version of adhan-kotlin by batoulapps for use in al-azan")
+        url.set("https://github.com/meypod/adhan-kotlin")
 
         licenses {
             license {
@@ -141,7 +141,7 @@ mavenPublishing {
             }
         }
         scm {
-            url.set("https://github.com/batoulapps/adhan-kotlin")
+            url.set("https://github.com/meypod/adhan-kotlin")
         }
 
     }

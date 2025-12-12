@@ -1,6 +1,6 @@
-package com.batoulapps.adhan2
+package io.github.meypod.adhan_kotlin
 
-import com.batoulapps.adhan2.data.DateComponents
+import io.github.meypod.adhan_kotlin.data.DateComponents
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone

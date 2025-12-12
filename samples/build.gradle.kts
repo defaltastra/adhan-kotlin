@@ -20,5 +20,5 @@ kotlin {
 }
 
 application {
- mainClass.set("com.batoulapps.adhan2.Example")
+ mainClass.set("io.github.meypod.adhan_kotlin.Example")
 }
