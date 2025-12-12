@@ -1,10 +1,12 @@
 package com.batoulapps.adhan2
 
 import com.batoulapps.adhan2.model.Rounding
+import kotlinx.serialization.Serializable
 
 /**
  * Standard calculation methods for calculating prayer times
  */
+@Serializable
 enum class CalculationMethod {
   /**
    * Muslim World League
@@ -106,12 +108,12 @@ enum class CalculationMethod {
       }
       DUBAI -> {
         CalculationParameters(fajrAngle = 18.2, ishaAngle = 18.2, method = this,
-          methodAdjustments = PrayerAdjustments(sunrise = -3, dhuhr = 3, asr = 3, maghrib = 3)
+          methodAdjustments = PrayerAdjustments(sunrise = -3, dhuhr = 3, asr = 3, sunset = 3, maghrib = 3)
         )
       }
       MOON_SIGHTING_COMMITTEE -> {
         CalculationParameters(fajrAngle = 18.0, ishaAngle = 18.0, method = this,
-          methodAdjustments = PrayerAdjustments(dhuhr = 5, maghrib = 3)
+          methodAdjustments = PrayerAdjustments(dhuhr = 5, sunset = 3, maghrib = 3)
         )
       }
       NORTH_AMERICA -> {
@@ -133,7 +135,7 @@ enum class CalculationMethod {
       }
       TURKEY -> {
         CalculationParameters(fajrAngle = 18.0, ishaAngle = 17.0, method = this,
-          methodAdjustments = PrayerAdjustments(sunrise = -7, dhuhr = 5, asr = 4, maghrib = 7)
+          methodAdjustments = PrayerAdjustments(sunrise = -7, dhuhr = 5, asr = 4, sunset = 7, maghrib = 7)
         )
       }
       OTHER -> {

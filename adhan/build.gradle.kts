@@ -67,6 +67,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
             }
         }
 
@@ -76,7 +77,6 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 api("com.squareup.okio:okio:3.16.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
             }
         }
 

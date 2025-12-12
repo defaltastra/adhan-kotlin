@@ -1,10 +1,13 @@
 package com.batoulapps.adhan2.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Shafaq is the twilight in the sky. Different madhabs define the appearance of
  * twilight differently. These values are used by the MoonsightingComittee method
  * for the different ways to calculate Isha.
  */
+@Serializable
 enum class Shafaq {
   // General is a combination of Ahmer and Abyad.
   GENERAL,

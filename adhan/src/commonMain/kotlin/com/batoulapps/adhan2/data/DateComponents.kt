@@ -4,9 +4,11 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
-class DateComponents(val year: Int, val month: Int, val day: Int) {
+@Serializable
+data class DateComponents(val year: Int, val month: Int, val day: Int) {
   companion object {
     /**
      * Convenience method that returns a DateComponents from a given [Instant]

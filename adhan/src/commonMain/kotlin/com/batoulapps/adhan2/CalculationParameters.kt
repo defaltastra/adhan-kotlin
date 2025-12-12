@@ -2,6 +2,7 @@ package com.batoulapps.adhan2
 
 import com.batoulapps.adhan2.model.Rounding
 import com.batoulapps.adhan2.model.Shafaq
+import kotlinx.serialization.Serializable
 
 /**
  * Parameters used for PrayerTime calculation customization
@@ -10,6 +11,7 @@ import com.batoulapps.adhan2.model.Shafaq
  * pre-computed set of calculation parameters depending on one of the available
  * {@link CalculationMethod}.
  */
+@Serializable
 data class CalculationParameters(
   // The angle of the sun used to calculate fajr
   val fajrAngle: Double = 0.0,
@@ -42,6 +44,7 @@ data class CalculationParameters(
   val shafaq: Shafaq = Shafaq.GENERAL
 ) {
 
+  @Serializable
   data class NightPortions(val fajr: Double, val isha: Double)
 
   fun nightPortions(coordinates: Coordinates): NightPortions {

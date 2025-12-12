@@ -3,12 +3,7 @@ package com.batoulapps.adhan2
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class Prayer {
-  NONE,
-  FAJR,
-  SUNRISE,
-  DHUHR,
-  ASR,
-  MAGHRIB,
-  ISHA
+enum class MidnightMethod {
+    SunsetToSunrise,
+    SunsetToFajr,
 }

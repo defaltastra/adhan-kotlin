@@ -1,8 +1,11 @@
 package com.batoulapps.adhan2
 
+import kotlinx.serialization.Serializable
+
 /**
  * Coordinates representing a particular place
  */
+@Serializable
 class Coordinates(
   val latitude: Double,
   val longitude: Double

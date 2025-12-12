@@ -3,10 +3,12 @@ package com.batoulapps.adhan2
 import com.batoulapps.adhan2.internal.ShadowLength
 import com.batoulapps.adhan2.internal.ShadowLength.DOUBLE
 import com.batoulapps.adhan2.internal.ShadowLength.SINGLE
+import kotlinx.serialization.Serializable
 
 /**
  * Madhab for determining how Asr is calculated
  */
+@Serializable
 enum class Madhab {
   /**
    * Shafi Madhab

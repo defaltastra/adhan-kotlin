@@ -39,6 +39,7 @@ data class PrayerTimes(
   val sunrise: Instant
   val dhuhr: Instant
   val asr: Instant
+  val sunset: Instant
   val maghrib: Instant
   val isha: Instant
 
@@ -47,6 +48,7 @@ data class PrayerTimes(
     val tempSunrise: LocalDateTime?
     val tempDhuhr: LocalDateTime?
     var tempAsr: LocalDateTime? = null
+    val tempSunset: LocalDateTime?
     val tempMaghrib: LocalDateTime?
     var tempIsha: LocalDateTime? = null
     val prayerDate: LocalDateTime = resolveTime(dateComponents)
@@ -73,10 +75,12 @@ data class PrayerTimes(
       tempSunrise = null
       tempDhuhr = null
       tempAsr = null
+      tempSunset = null
       tempMaghrib = null
     } else {
       tempDhuhr = transit
       tempSunrise = sunriseComponents
+      tempSunset = sunsetComponents
       tempMaghrib = sunsetComponents
       timeComponents = TimeComponents.fromDouble(
         solarTime.afternoon(calculationParameters.madhab.shadowLength)
@@ -163,7 +167,7 @@ data class PrayerTimes(
       }
     }
 
-    if (tempFajr == null || tempSunrise == null || tempDhuhr == null || tempAsr == null || tempMaghrib == null || tempIsha == null) {
+    if (tempFajr == null || tempSunrise == null || tempSunset == null || tempDhuhr == null || tempAsr == null || tempMaghrib == null || tempIsha == null) {
       // if we don't have all prayer times then initialization failed
       throw IllegalStateException()
     } else {
@@ -207,6 +211,14 @@ data class PrayerTimes(
           DateTimeUnit.MINUTE
         ),
         rounding = calculationParameters.rounding
+      ).toUtcInstant()
+      sunset = roundedMinute(
+          add(
+              add(tempSunset, calculationParameters.prayerAdjustments.sunset, DateTimeUnit.MINUTE),
+              calculationParameters.methodAdjustments.sunset,
+              DateTimeUnit.MINUTE
+          ),
+          rounding = calculationParameters.rounding
       ).toUtcInstant()
       isha = roundedMinute(
         add(
