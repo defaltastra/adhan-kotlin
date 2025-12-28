@@ -71,6 +71,12 @@ enum class CalculationMethod {
   SINGAPORE,
 
   /**
+   * Tehran
+   * Uses a Fajr angle of 17.7 and an Isha angle of 14, and a maghrib angle of 4.5
+   */
+  TEHRAN,
+
+  /**
    * Diyanet İşleri Başkanlığı, Turkey
    * Uses a Fajr angle of 18 and an Isha angle of 17
    */
@@ -131,6 +137,11 @@ enum class CalculationMethod {
         CalculationParameters(fajrAngle = 20.0, ishaAngle = 18.0, method = this,
           methodAdjustments = PrayerAdjustments(dhuhr = 1),
           rounding = Rounding.UP
+        )
+      }
+      TEHRAN -> {
+        CalculationParameters(fajrAngle = 17.7, ishaAngle = 14.0,
+            maghribAngle = 4.5, method = this,
         )
       }
       TURKEY -> {

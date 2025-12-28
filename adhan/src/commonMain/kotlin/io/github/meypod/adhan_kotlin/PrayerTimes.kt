@@ -49,7 +49,7 @@ data class PrayerTimes(
     val tempDhuhr: LocalDateTime?
     var tempAsr: LocalDateTime? = null
     val tempSunset: LocalDateTime?
-    val tempMaghrib: LocalDateTime?
+    var tempMaghrib: LocalDateTime?
     var tempIsha: LocalDateTime? = null
     val prayerDate: LocalDateTime = resolveTime(dateComponents)
 
@@ -163,6 +163,21 @@ data class PrayerTimes(
 
         if (tempIsha == null || tempIsha.after(safeIsha)) {
           tempIsha = safeIsha
+        }
+      }
+
+      if (calculationParameters.maghribAngle > 0.0) {
+        timeComponents = TimeComponents.fromDouble(
+          solarTime.timeForSolarAngle(-calculationParameters.maghribAngle, true)
+        )
+        if (timeComponents != null) {
+          val angleBasedMaghrib = timeComponents.dateComponents(dateComponents)
+          if (
+            tempSunset.before(angleBasedMaghrib) &&
+            tempIsha.after(angleBasedMaghrib)
+          ) {
+            tempMaghrib = angleBasedMaghrib
+          }
         }
       }
     }

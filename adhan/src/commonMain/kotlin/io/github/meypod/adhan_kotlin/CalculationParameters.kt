@@ -22,6 +22,10 @@ data class CalculationParameters(
   // Minutes after Maghrib (if set, the time for Isha will be Maghrib plus IshaInterval)
   val ishaInterval: Int = 0,
 
+  // Angle of the sun below the horizon used for calculating Maghrib.
+  // Only used by the Tehran method to account for lightness in the sky.
+  val maghribAngle: Double = 0.0,
+
   // The method used to do the calculation
   val method: CalculationMethod = CalculationMethod.OTHER,
 

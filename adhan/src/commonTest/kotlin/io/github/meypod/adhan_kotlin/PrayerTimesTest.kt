@@ -204,6 +204,24 @@ class PrayerTimesTest {
   }
 
   @Test
+  fun testTehranTimes20251228() {
+    val date = DateComponents(2025, 12, 28)
+    val params = CalculationMethod.TEHRAN.parameters
+    val coordinates = Coordinates(35.68889, 51.38972)
+
+    val zoneId = "Asia/Tehran"
+    val prayerTimes = PrayerTimes(coordinates, date, params)
+    val sunnah = SunnahTimes(prayerTimes)
+
+    assertEquals("05:43 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
+    assertEquals("07:13 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
+    assertEquals("12:06 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
+    assertEquals("04:59 PM", stringifyAtTimezone(prayerTimes.sunset, zoneId))
+    assertEquals("05:19 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
+    assertEquals("11:22 PM", stringifyAtTimezone(sunnah.middleOfTheNight, zoneId))
+  }
+
+  @Test
   fun testTimeForPrayer() {
     val components = DateComponents(2016, 7, 1)
     val parameters = MUSLIM_WORLD_LEAGUE.parameters.copy(
