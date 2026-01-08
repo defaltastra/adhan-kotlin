@@ -7,6 +7,7 @@ import io.github.meypod.adhan_kotlin.Prayer.ISHA
 import io.github.meypod.adhan_kotlin.Prayer.MAGHRIB
 import io.github.meypod.adhan_kotlin.Prayer.NONE
 import io.github.meypod.adhan_kotlin.Prayer.SUNRISE
+import io.github.meypod.adhan_kotlin.data.CalendarUtil
 import io.github.meypod.adhan_kotlin.data.CalendarUtil.add
 import io.github.meypod.adhan_kotlin.data.CalendarUtil.isLeapYear
 import io.github.meypod.adhan_kotlin.data.CalendarUtil.resolveTime
@@ -43,7 +44,14 @@ data class PrayerTimes(
   val maghrib: Instant
   val isha: Instant
 
+  /**
+   * This coordinate can differ from the original passed coordinate only
+   * if the polar resolution method is [PolarCircleResolution.AqrabBalad]
+   */
+  val effectiveCoordinates: Coordinates
+
   init {
+    var coordinates = coordinates
     var tempFajr: LocalDateTime? = null
     val tempSunrise: LocalDateTime?
     val tempDhuhr: LocalDateTime?
@@ -56,20 +64,44 @@ data class PrayerTimes(
     val dayOfYear: Int = prayerDate.dayOfYear
 
     val tomorrowDate: LocalDateTime = add(prayerDate, 1, DateTimeUnit.DAY)
-    val tomorrow: DateComponents = DateComponents.fromLocalDateTime(tomorrowDate)
+    var tomorrow: DateComponents = DateComponents.fromLocalDateTime(tomorrowDate)
 
-    val solarTime = SolarTime(dateComponents, coordinates)
+    var solarTime = SolarTime(dateComponents, coordinates)
     var timeComponents = TimeComponents.fromDouble(solarTime.transit)
-    val transit = timeComponents?.dateComponents(dateComponents)
+    var transit = timeComponents?.dateComponents(dateComponents)
 
     timeComponents = TimeComponents.fromDouble(solarTime.sunrise)
-    val sunriseComponents = timeComponents?.dateComponents(dateComponents)
+    var sunriseComponents = timeComponents?.dateComponents(dateComponents)
 
     timeComponents = TimeComponents.fromDouble(solarTime.sunset)
-    val sunsetComponents = timeComponents?.dateComponents(dateComponents)
+    var sunsetComponents = timeComponents?.dateComponents(dateComponents)
 
-    val tomorrowSolarTime = SolarTime(tomorrow, coordinates)
-    val tomorrowSunriseComponents = TimeComponents.fromDouble(tomorrowSolarTime.sunrise)
+    var tomorrowSolarTime = SolarTime(tomorrow, coordinates)
+    var tomorrowSunriseComponents = TimeComponents.fromDouble(tomorrowSolarTime.sunrise)
+
+    val polarCircleResolver = calculationParameters.polarCircleResolution
+    if ((sunriseComponents == null || sunsetComponents == null || tomorrowSolarTime.sunrise.isNaN())
+      && polarCircleResolver != PolarCircleResolution.Unresolved) {
+      val resolved = resolvePolarCircleValues(polarCircleResolver, dateComponents, coordinates)
+
+      coordinates = resolved.coordinates
+      solarTime = resolved.solarTime
+      tomorrow = resolved.tomorrow
+
+      timeComponents = TimeComponents.fromDouble(solarTime.transit)
+      transit = timeComponents?.dateComponents(dateComponents)
+
+      timeComponents = TimeComponents.fromDouble(solarTime.sunrise)
+      sunriseComponents = timeComponents?.dateComponents(dateComponents)
+
+      timeComponents = TimeComponents.fromDouble(solarTime.sunset)
+      sunsetComponents = timeComponents?.dateComponents(dateComponents)
+
+      tomorrowSolarTime = resolved.tomorrowSolarTime
+      tomorrowSunriseComponents = TimeComponents.fromDouble(tomorrowSolarTime.sunrise)
+    }
+
+    effectiveCoordinates = coordinates
 
     if (transit == null || sunriseComponents == null || sunsetComponents == null || tomorrowSunriseComponents == null) {
       tempSunrise = null
@@ -91,7 +123,8 @@ data class PrayerTimes(
       }
 
       // get night length
-      val tomorrowSunrise = tomorrowSunriseComponents.dateComponents(tomorrow)
+      // we recreate tomorrow from today, because polar resolution may change that
+      val tomorrowSunrise = tomorrowSunriseComponents.dateComponents(DateComponents.fromLocalDateTime(add(prayerDate, 1, DateTimeUnit.DAY)))
       val night = tomorrowSunrise.toInstant(TimeZone.UTC).toEpochMilliseconds() -
           sunsetComponents.toInstant(TimeZone.UTC).toEpochMilliseconds()
 

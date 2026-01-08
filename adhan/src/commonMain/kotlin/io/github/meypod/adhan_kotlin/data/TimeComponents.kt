@@ -21,5 +21,9 @@ class TimeComponents private constructor(val hours: Int, val minutes: Int, val s
       val seconds: Double = floor((value - (hours + minutes / 60.0)) * 60 * 60)
       return TimeComponents(hours.toInt(), minutes.toInt(), seconds.toInt())
     }
+
+    fun fromLocalDateTime(value: LocalDateTime): TimeComponents {
+      return TimeComponents(value.hour, value.minute, value.second)
+    }
   }
 }

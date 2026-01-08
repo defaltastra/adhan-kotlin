@@ -45,7 +45,9 @@ data class CalculationParameters(
   val rounding: Rounding = Rounding.NEAREST,
 
   // Twilight in the sky
-  val shafaq: Shafaq = Shafaq.GENERAL
+  val shafaq: Shafaq = Shafaq.GENERAL,
+
+  val polarCircleResolution: PolarCircleResolution = PolarCircleResolution.Unresolved
 ) {
 
   @Serializable
