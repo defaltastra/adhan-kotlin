@@ -2,6 +2,10 @@
 
 ## development
 
+## version 0.0.8
+
+- add polarCircleResolution to CalculationParameters
+
 ## version 0.0.7
 
 - add maghribAngle to CalculationParameters
