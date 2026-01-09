@@ -9,6 +9,18 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class CalculationMethod {
   /**
+   * The default value for [CalculationParameters.method] when initializing a
+   * [CalculationParameters] object. Sets a Fajr angle of 0 and an Isha angle of 0.
+   */
+  OTHER,
+
+  /**
+   * Moonsighting Committee
+   * Uses a Fajr angle of 18 and an Isha angle of 18. Also uses seasonal adjustment values.
+   */
+  MOON_SIGHTING_COMMITTEE,
+
+  /**
    * Muslim World League
    * Uses Fajr angle of 18 and an Isha angle of 17
    */
@@ -34,23 +46,23 @@ enum class CalculationMethod {
   UMM_AL_QURA,
 
   /**
-   * The Gulf Region
-   * Uses Fajr and Isha angles of 18.2 degrees.
-   */
-  DUBAI,
-
-  /**
-   * Moonsighting Committee
-   * Uses a Fajr angle of 18 and an Isha angle of 18. Also uses seasonal adjustment values.
-   */
-  MOON_SIGHTING_COMMITTEE,
-
-  /**
    * Referred to as the ISNA method
    * This method is included for completeness, but is not recommended.
    * Uses a Fajr angle of 15 and an Isha angle of 15.
    */
   NORTH_AMERICA,
+
+  /**
+   * Gulf region
+   * Modified version of Umm al-Qura that uses a Fajr angle of 19.5.
+   */
+  GULF,
+
+  /**
+   * The Gulf Region (Dubai)
+   * Uses Fajr and Isha angles of 18.2 degrees.
+   */
+  DUBAI,
 
   /**
    * Kuwait
@@ -71,10 +83,22 @@ enum class CalculationMethod {
   SINGAPORE,
 
   /**
-   * Tehran
-   * Uses a Fajr angle of 17.7 and an Isha angle of 14, and a maghrib angle of 4.5
+   * Union Organization Islamic de France
+   * Uses a Fajr angle of 12 and an Isha angle of 12.
    */
-  TEHRAN,
+  FRANCE,
+
+  /**
+   * France angle 15
+   * Uses a Fajr angle of 15 and an Isha angle of 15.
+   */
+  FRANCE15,
+
+  /**
+   * France angle 18
+   * Uses a Fajr angle of 18 and an Isha angle of 18.
+   */
+  FRANCE18,
 
   /**
    * Diyanet İşleri Başkanlığı, Turkey
@@ -83,10 +107,46 @@ enum class CalculationMethod {
   TURKEY,
 
   /**
-   * The default value for [CalculationParameters.method] when initializing a
-   * [CalculationParameters] object. Sets a Fajr angle of 0 and an Isha angle of 0.
+   * Spiritual Administration of Muslims of Russia
+   * Uses a Fajr angle of 16 and an Isha angle of 15.
    */
-  OTHER;
+  RUSSIA,
+
+  /**
+   * Shia Ithna Ashari, Leva Institute, Qum, Iran
+   * Uses Fajr angle of 16, Maghrib angle of 4 and Isha angle of 14
+   */
+  JAFARI,
+
+  /**
+   * Tehran
+   * Uses a Fajr angle of 17.7 and an Isha angle of 14, and a maghrib angle of 4.5
+   */
+  TEHRAN,
+
+  /**
+   * Kementrian Agama Republik Indonesia (KEMENAG)
+   * Uses Fajr angle of 20.0 and Isha angle of 18
+   */
+  KEMENAG,
+
+  /**
+   * Ministry of Religious Affairs and Wakfs, Algeria
+   * Uses Fajr angle of 18, Isha angle of 17, + 3min maghrib
+   */
+  ALGERIA,
+
+  /**
+   * Kementrian Hal Ehwal Ugama (Brunei Darussalam)
+   * Uses Fajr angle of 20 and Isha angle of 18
+   */
+  BRUNEI,
+
+  /**
+   * Ministry of Religious Affairs of Tunisia
+   * Uses Fajr angle of 18 and Isha angle of 18
+   */
+  TUNISIA;
 
   /**
    * Return the CalculationParameters for the given method
@@ -94,63 +154,142 @@ enum class CalculationMethod {
    */
   val parameters: CalculationParameters
     get() = when (this) {
+      OTHER -> {
+        CalculationParameters(fajrAngle = 0.0, ishaAngle = 0.0, method = this)
+      }
+
       MUSLIM_WORLD_LEAGUE -> {
-        CalculationParameters(fajrAngle = 18.0, ishaAngle = 17.0, method = this,
-          methodAdjustments = PrayerAdjustments(dhuhr = 1)
+        CalculationParameters(
+            fajrAngle = 18.0, ishaAngle = 17.0, method = this,
+            methodAdjustments = PrayerAdjustments(dhuhr = 1),
         )
       }
+
+      MOON_SIGHTING_COMMITTEE -> {
+        CalculationParameters(
+            fajrAngle = 18.0, ishaAngle = 18.0, method = this,
+            methodAdjustments = PrayerAdjustments(dhuhr = 5, sunset = 3, maghrib = 3),
+        )
+      }
+
       EGYPTIAN -> {
-        CalculationParameters(fajrAngle = 19.5, ishaAngle = 17.5, method = this,
-          methodAdjustments = PrayerAdjustments(dhuhr = 1)
+        CalculationParameters(
+            fajrAngle = 19.5, ishaAngle = 17.5, method = this,
+            methodAdjustments = PrayerAdjustments(dhuhr = 1),
         )
       }
+
       KARACHI -> {
-        CalculationParameters(fajrAngle = 18.0, ishaAngle = 18.0, method = this,
-          methodAdjustments = PrayerAdjustments(dhuhr = 1)
+        CalculationParameters(
+            fajrAngle = 18.0, ishaAngle = 18.0, method = this,
+            methodAdjustments = PrayerAdjustments(dhuhr = 1),
         )
       }
+
       UMM_AL_QURA -> {
         CalculationParameters(fajrAngle = 18.5, ishaInterval = 90, method = this)
       }
-      DUBAI -> {
-        CalculationParameters(fajrAngle = 18.2, ishaAngle = 18.2, method = this,
-          methodAdjustments = PrayerAdjustments(sunrise = -3, dhuhr = 3, asr = 3, sunset = 3, maghrib = 3)
-        )
-      }
-      MOON_SIGHTING_COMMITTEE -> {
-        CalculationParameters(fajrAngle = 18.0, ishaAngle = 18.0, method = this,
-          methodAdjustments = PrayerAdjustments(dhuhr = 5, sunset = 3, maghrib = 3)
-        )
-      }
+
       NORTH_AMERICA -> {
-        CalculationParameters(fajrAngle = 15.0, ishaAngle = 15.0, method = this,
-          methodAdjustments = PrayerAdjustments(dhuhr = 1)
+        CalculationParameters(
+            fajrAngle = 15.0, ishaAngle = 15.0, method = this,
+            methodAdjustments = PrayerAdjustments(dhuhr = 1),
         )
       }
+
+      GULF -> {
+        CalculationParameters(fajrAngle = 19.5, ishaInterval = 90, method = this)
+      }
+
+      DUBAI -> {
+        CalculationParameters(
+            fajrAngle = 18.2, ishaAngle = 18.2, method = this,
+            methodAdjustments = PrayerAdjustments(
+                sunrise = -3,
+                dhuhr = 3,
+                asr = 3,
+                sunset = 3,
+                maghrib = 3,
+            ),
+        )
+      }
+
       KUWAIT -> {
         CalculationParameters(fajrAngle = 18.0, ishaAngle = 17.5, method = this)
       }
+
       QATAR -> {
         CalculationParameters(fajrAngle = 18.0, ishaInterval = 90, method = this)
       }
+
       SINGAPORE -> {
-        CalculationParameters(fajrAngle = 20.0, ishaAngle = 18.0, method = this,
-          methodAdjustments = PrayerAdjustments(dhuhr = 1),
-          rounding = Rounding.UP
+        CalculationParameters(
+            fajrAngle = 20.0, ishaAngle = 18.0, method = this,
+            methodAdjustments = PrayerAdjustments(dhuhr = 1),
+            rounding = Rounding.UP,
         )
       }
+
+      FRANCE -> {
+        CalculationParameters(fajrAngle = 12.0, ishaAngle = 12.0, method = this)
+      }
+
+      FRANCE15 -> {
+        CalculationParameters(fajrAngle = 15.0, ishaAngle = 15.0, method = this)
+      }
+
+      FRANCE18 -> {
+        CalculationParameters(fajrAngle = 18.0, ishaAngle = 18.0, method = this)
+      }
+
+      TURKEY -> {
+        CalculationParameters(
+            fajrAngle = 18.0, ishaAngle = 17.0, method = this,
+            methodAdjustments = PrayerAdjustments(
+                sunrise = -7,
+                dhuhr = 5,
+                asr = 4,
+                sunset = 7,
+                maghrib = 7,
+            ),
+        )
+      }
+
+      RUSSIA -> {
+        CalculationParameters(fajrAngle = 16.0, ishaAngle = 15.0, method = this)
+      }
+
+      JAFARI -> {
+        CalculationParameters(fajrAngle = 16.0, ishaAngle = 14.0, maghribAngle = 4.0, method = this)
+      }
+
       TEHRAN -> {
-        CalculationParameters(fajrAngle = 17.7, ishaAngle = 14.0,
+        CalculationParameters(
+            fajrAngle = 17.7, ishaAngle = 14.0,
             maghribAngle = 4.5, method = this,
         )
       }
-      TURKEY -> {
-        CalculationParameters(fajrAngle = 18.0, ishaAngle = 17.0, method = this,
-          methodAdjustments = PrayerAdjustments(sunrise = -7, dhuhr = 5, asr = 4, sunset = 7, maghrib = 7)
+
+      KEMENAG -> {
+        CalculationParameters(fajrAngle = 20.0, ishaAngle = 18.0, method = this)
+      }
+
+      ALGERIA -> {
+        CalculationParameters(
+            fajrAngle = 18.0, ishaAngle = 17.0, method = this,
+            methodAdjustments = PrayerAdjustments(
+                sunset = 3,
+                maghrib = 3,
+            ),
         )
       }
-      OTHER -> {
-        CalculationParameters(fajrAngle = 0.0, ishaAngle = 0.0, method = this)
+
+      BRUNEI -> {
+        CalculationParameters(fajrAngle = 20.0, ishaAngle = 18.0, method = this)
+      }
+
+      TUNISIA -> {
+        CalculationParameters(fajrAngle = 18.0, ishaAngle = 18.0, method = this)
       }
     }
 }
