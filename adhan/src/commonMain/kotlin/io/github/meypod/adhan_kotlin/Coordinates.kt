@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
  * Coordinates representing a particular place
  */
 @Serializable
-class Coordinates(
+data class Coordinates(
   val latitude: Double,
   val longitude: Double
 ) {
