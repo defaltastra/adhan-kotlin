@@ -8,6 +8,7 @@ import io.github.meypod.adhan_kotlin.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
 import io.github.meypod.adhan_kotlin.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
 import io.github.meypod.adhan_kotlin.HighLatitudeRule.TWILIGHT_ANGLE
 import io.github.meypod.adhan_kotlin.Madhab.HANAFI
+import io.github.meypod.adhan_kotlin.Madhab.SHAFI
 import io.github.meypod.adhan_kotlin.Prayer.ASR
 import io.github.meypod.adhan_kotlin.Prayer.DHUHR
 import io.github.meypod.adhan_kotlin.Prayer.FAJR
@@ -27,6 +28,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.test.assertTrue
 import kotlin.time.Instant
 
 class PrayerTimesTest {
@@ -488,5 +490,27 @@ class PrayerTimesTest {
     assertEquals("04:26 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
     assertEquals("06:13 PM", stringifyAtTimezone(fourthPrayerTimes.maghrib, zoneId))
     assertEquals("07:37 PM", stringifyAtTimezone(fourthPrayerTimes.isha, zoneId))
+  }
+
+  @Test
+  fun testPrayerTimesProblems_fajr_after_sunrise__and_isha_before_maghrib1() {
+    checkPrayersOrder(DateComponents(2025, 12, 1), Coordinates(42.74674252600066, 177.2401196144623))
+  }
+
+  @Test
+  fun testPrayerTimesProblems_fajr_after_sunrise__and_isha_before_maghrib2() {
+    checkPrayersOrder(DateComponents(2025, 12, 1), Coordinates(47.082209457885355, 177.24642294208638))
+  }
+
+  private fun checkPrayersOrder(date: DateComponents, coordinates: Coordinates) {
+    val params = MUSLIM_WORLD_LEAGUE.parameters.copy(
+      madhab = SHAFI,
+      highLatitudeRule = TWILIGHT_ANGLE)
+    val prayerTimes = PrayerTimes(coordinates, date, params)
+    assertTrue(prayerTimes.fajr.epochSeconds < prayerTimes.sunrise.epochSeconds)
+    assertTrue(prayerTimes.sunrise.epochSeconds < prayerTimes.dhuhr.epochSeconds)
+    assertTrue(prayerTimes.dhuhr.epochSeconds < prayerTimes.asr.epochSeconds)
+    assertTrue(prayerTimes.asr.epochSeconds < prayerTimes.maghrib.epochSeconds)
+    assertTrue(prayerTimes.maghrib.epochSeconds < prayerTimes.isha.epochSeconds)
   }
 }

@@ -1,6 +1,7 @@
 # Changelog
 
 ## development
+- fix for an edge case around international date line (thanks @z3bi)
 
 ## version 0.0.8
 
