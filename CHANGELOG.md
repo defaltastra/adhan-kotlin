@@ -2,6 +2,10 @@
 
 ## development
 
+## version 0.0.12
+
+- update Kotlin to 2.3.21
+
 ## version 0.0.11
 
 - fix for an edge case around international date line (thanks @z3bi)
