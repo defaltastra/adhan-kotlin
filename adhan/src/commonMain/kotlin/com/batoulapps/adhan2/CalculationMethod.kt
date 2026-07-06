@@ -143,7 +143,7 @@ enum class CalculationMethod {
         )
       }
       MOROCCO -> {
-        CalculationParameters(fajrAngle = 18.0, ishaAngle = 17.0, method = this,
+        CalculationParameters(fajrAngle = 19.0, ishaAngle = 17.0, method = this,
           methodAdjustments = PrayerAdjustments(dhuhr = 1)
         )
       }
